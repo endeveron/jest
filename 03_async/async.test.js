@@ -1,4 +1,7 @@
+const axios = require('axios')
 const Ajax = require('./async')
+
+jest.mock('axios')
 
 describe('Ajax: echo', () => {
 
@@ -20,4 +23,31 @@ describe('Ajax: echo', () => {
       expect(err.toBeInstanceOf(Error))
     })
   })
+})
+
+describe('Axios: GET', () => {
+  let res, todos
+
+  beforeEach(() => {
+    todos = [{
+      id: 1,
+      title: 'ToDo 1',
+      completed: false
+    }]
+
+    res = {
+      data: {
+        todos
+      }
+    }
+  })
+
+  test('should return data from backend', () => {
+    axios.get.mockReturnValue(res)
+
+    return Ajax.get().then(data => {
+      expect(data.todos).toEqual(todos)
+    })
+  })
+
 })
